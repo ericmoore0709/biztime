@@ -8,9 +8,13 @@ const ExpressError = require("./expressError")
 
 app.use(express.json());
 
+// import routers
 const companiesRouter = require('./routes/companies');
-app.use('/companies', companiesRouter);
+const invoicesRouter = require('./routes/invoices');
 
+// set router endpoints
+app.use('/companies', companiesRouter);
+app.use('/invoices', invoicesRouter);
 
 /** 404 handler */
 

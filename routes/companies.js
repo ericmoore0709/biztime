@@ -16,7 +16,7 @@ router.get('/', async (req, res, next) => {
 
 });
 
-router.get('/:code', async (req, res, next) => {
+router.get('/:id', async (req, res, next) => {
 
     const code = req.params.code;
 
@@ -57,7 +57,7 @@ router.post('/', async (req, res, next) => {
 
 });
 
-router.put('/:code', async (req, res, next) => {
+router.put('/:id', async (req, res, next) => {
     const code = req.params.code;
 
     try {
@@ -85,7 +85,7 @@ router.put('/:code', async (req, res, next) => {
 
 });
 
-router.delete('/:code', async (req, res, next) => {
+router.delete('/:id', async (req, res, next) => {
 
     const code = req.params.code;
 
