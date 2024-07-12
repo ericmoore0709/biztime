@@ -11,25 +11,25 @@ router.get('/', async (req, res, next) => {
         return res.status(200).json({ companies: companies.rows });
     } catch (err) {
         console.log(err);
-        return next(err);
+        return res.status(500).json({ error: 'Internal Server Error' });
     }
 
 });
 
-router.get('/:id', async (req, res, next) => {
+router.get('/:code', async (req, res, next) => {
 
     const code = req.params.code;
 
     try {
-        const company = await db.query('SELECT * FROM companies WHERE code = $1 LIMIT 1;', [code]);
+        const company = await db.query('SELECT * FROM companies WHERE code = $1;', [code]);
 
         if (company.rowCount)
             return res.status(200).json({ company: company.rows[0] });
 
-        return res.status(404).json({ error: { code: 404, message: 'Company not found.' } });
+        return res.status(404).json({ error: 'Company not found.' });
     } catch (err) {
         console.log(err);
-        return next(err);
+        return res.status(500).json({ error: 'Internal Server Error' });
     }
 
 });
@@ -52,12 +52,12 @@ router.post('/', async (req, res, next) => {
 
     } catch (err) {
         console.log(err);
-        return next(err);
+        return res.status(500).json({ error: 'Internal Server Error' });
     }
 
 });
 
-router.put('/:id', async (req, res, next) => {
+router.put('/:code', async (req, res, next) => {
     const code = req.params.code;
 
     try {
@@ -80,12 +80,12 @@ router.put('/:id', async (req, res, next) => {
 
     } catch (err) {
         console.log(err);
-        return next(err);
+        return res.status(500).json({ error: 'Internal Server Error' });
     }
 
 });
 
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:code', async (req, res, next) => {
 
     const code = req.params.code;
 
@@ -106,7 +106,7 @@ router.delete('/:id', async (req, res, next) => {
 
     } catch (err) {
         console.log(err);
-        return next(err);
+        return res.status(500).json({ error: 'Internal Server Error' });
     }
 
 });
