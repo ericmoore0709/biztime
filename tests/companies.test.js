@@ -2,7 +2,6 @@
 const request = require('supertest');
 const app = require('../app');
 const db = require('../db');
-const { default: slugify } = require('slugify');
 
 let companyCode;
 

@@ -11,10 +11,12 @@ app.use(express.json());
 // import routers
 const companiesRouter = require('./routes/companies');
 const invoicesRouter = require('./routes/invoices');
+const industriesRouter = require('./routes/industries');
 
 // set router endpoints
 app.use('/companies', companiesRouter);
 app.use('/invoices', invoicesRouter);
+app.use('/industries', industriesRouter);
 
 /** 404 handler */
 
