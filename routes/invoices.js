@@ -23,7 +23,7 @@ router.get('/:id', async (req, res, next) => {
 
     try {
 
-        const invoice = await db.query('SELECT * FROM invoices WHERE id = $1 LIMIT 1', [id]);
+        const invoice = await db.query('SELECT * FROM invoices WHERE id = $1 LIMIT 1;', [id]);
 
         if (invoice.rowCount)
             return res.status(200).json({ invoice: invoice.rows[0] });
@@ -40,12 +40,12 @@ router.get('/:id', async (req, res, next) => {
 router.post('/', async (req, res, next) => {
 
     try {
-        const { comp_code, amt, paid, paid_date } = req.body;
+        const { comp_code, amt } = req.body;
 
-        if (!comp_code || !amt || !paid || !paid_date)
+        if (!comp_code || !amt)
             return res.status(400).json({ error: 'Missing required fields.' });
 
-        const result = await db.query('INSERT INTO invoices (comp_Code, amt, paid, paid_date) VALUES ($1, $2, $3, $4) RETURNING *;', [comp_code, amt, paid, paid_date]);
+        const result = await db.query('INSERT INTO invoices (comp_code, amt) VALUES ($1, $2) RETURNING *;', [comp_code, amt]);
 
         if (result.rowCount)
             return res.status(201).json({ invoice: result.rows[0] });
