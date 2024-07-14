@@ -65,12 +65,14 @@ router.put('/:id', async (req, res, next) => {
 
     try {
 
-        const { amt } = req.body;
+        const { amt, paid = false } = req.body;
 
         if (!amt)
-            return res.status(400).json({ error: "amt is required." });
+            return res.status(400).json({ error: "Missing `amt` field." });
 
-        const result = await db.query('UPDATE invoices SET amt = $1 WHERE id = $2 RETURNING *;', [amt, id]);
+        const paidDate = paid ? _formatDate(new Date()) : null;
+
+        const result = await db.query('UPDATE invoices SET amt = $1, paid = $2, paid_date = $3 WHERE id = $4 RETURNING *;', [amt, paid, paidDate, id]);
 
         if (result.rowCount)
             return res.status(200).json({ invoice: result.rows[0] });
@@ -103,5 +105,12 @@ router.delete('/:id', async (req, res, next) => {
     }
 
 });
+
+function _formatDate(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
 
 module.exports = router;

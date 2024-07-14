@@ -2,7 +2,9 @@
 const request = require('supertest');
 const app = require('../app');
 const db = require('../db');
-const { beforeEach } = require('node:test');
+const { default: slugify } = require('slugify');
+
+let companyCode;
 
 beforeAll(async () => {
     await db.query('DELETE FROM companies;');
@@ -13,24 +15,25 @@ afterAll(async () => {
 });
 
 describe('Companies CRUD API', () => {
-    let companyCode;
 
     // Test for creating a company
     it('should create a new company', async () => {
         const response = await request(app)
             .post('/companies')
             .send({
-                name: 'Test Company',
-                description: 'This is a test company',
+                name: 'First Company',
+                description: 'This is the first company.',
             })
             .expect(201);
 
         expect(response.body.company).toHaveProperty('code');
-        companyCode = response.body.company.code; // Store the company code for later tests
+
+        companyCode = response.body.company.code;
     });
 
     // Test for reading all companies
     it('should retrieve all companies', async () => {
+
         const response = await request(app)
             .get('/companies')
             .expect(200);

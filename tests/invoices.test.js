@@ -11,7 +11,7 @@ beforeAll(async () => {
 
     // delete all companies and add test company for 
     await db.query('DELETE FROM companies;');
-    await db.query('INSERT INTO companies (code, name, description) VALUES ($1, $2, $3) RETURNING code;', [compCode, 'Test Company', 'It is a test company.']);
+    await db.query('INSERT INTO companies (code, name, description) VALUES ($1, $2, $3)', [compCode, 'Test Company', 'It is a test company.']);
 });
 
 afterAll(async () => {
