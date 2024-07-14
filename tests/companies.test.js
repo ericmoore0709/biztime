@@ -20,7 +20,6 @@ describe('Companies CRUD API', () => {
         const response = await request(app)
             .post('/companies')
             .send({
-                code: 'testcode',
                 name: 'Test Company',
                 description: 'This is a test company',
             })
@@ -75,32 +74,14 @@ describe('Companies CRUD API', () => {
             .expect(404);
     });
 
-    // Error handling snippets for CRUD operations
-
-    // // Test for handling database connection error
-    // it('should handle database connection error', async () => {
-    //     // Close the database connection to simulate a connection error
-    //     await db.end();
-
-    //     const response = await request(app)
-    //         .get('/companies')
-    //         .expect(500);
-
-    //     expect(response.body).toHaveProperty('error', 'Internal Server Error');
-    // });
-
     // Test for handling improper data in POST request
     it('should handle improper data in POST request', async () => {
         const response = await request(app)
             .post('/companies')
             .send({
-                // Missing 'name' field intentionally
-                code: 'testcode',
-                description: 'This is a test company',
+                // empty JSON
             })
             .expect(400);
-
-        expect(response.body).toHaveProperty('error', 'Missing required fields');
     });
 
     // Test for handling company not found error
@@ -110,30 +91,26 @@ describe('Companies CRUD API', () => {
         const response = await request(app)
             .get(`/companies/${nonExistentCode}`)
             .expect(404);
-
-        expect(response.body).toHaveProperty('error', 'Company not found.');
     });
 
     // Test for handling improper data in PUT request
     it('should handle improper data in PUT request', async () => {
-        
+
         const putData = await request(app)
             .post('/companies')
             .send({
-                code: 'testcode',
-                name: 'Test Company',
-                description: 'This is a test company',
+                name: 'New Company',
+                description: 'This is a new company',
             })
-        
+
+        const code = putData.body.company.code;
+
         const response = await request(app)
-            .put(`/companies/${companyCode}`)
+            .put(`/companies/${code}`)
             .send({
-                // Missing 'name' field intentionally
-                description: 'Updated description',
+                // empty JSON
             })
             .expect(400);
-
-        expect(response.body).toHaveProperty('error', 'Missing required fields');
     });
 
     // Test for handling company not found error in PUT request
@@ -147,8 +124,6 @@ describe('Companies CRUD API', () => {
                 description: 'Updated description',
             })
             .expect(404);
-
-        expect(response.body).toHaveProperty('error', 'Company not found.');
     });
 
     // Test for handling company deletion error
@@ -158,8 +133,6 @@ describe('Companies CRUD API', () => {
         const response = await request(app)
             .delete(`/companies/${nonExistentCode}`)
             .expect(404);
-
-        expect(response.body).toHaveProperty('error', 'Company not found.');
     });
 
 

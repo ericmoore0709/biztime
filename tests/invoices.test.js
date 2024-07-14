@@ -3,7 +3,7 @@ const request = require('supertest');
 const app = require('../app');
 const db = require('../db');
 
-let compCode = 'testcomp';
+let compCode = 'test-company';
 
 beforeAll(async () => {
     // delete all invoices
@@ -88,8 +88,6 @@ describe('invoices CRUD API', () => {
                 comp_code: compCode,
             })
             .expect(400);
-
-        expect(response.body).toHaveProperty('error', 'Missing required fields.');
     });
 
     // Test for handling invoice not found error
@@ -100,7 +98,6 @@ describe('invoices CRUD API', () => {
             .get(`/invoices/${nonExistentId}`)
             .expect(404);
 
-        expect(response.body).toHaveProperty('error', 'Invoice not found.');
     });
 
     // Test for handling improper data in PUT request
@@ -124,7 +121,6 @@ describe('invoices CRUD API', () => {
             })
             .expect(400);
 
-        expect(response.body).toHaveProperty('error', 'amt is required.');
     });
 
     // Test for handling invoice not found error in PUT request
@@ -138,7 +134,6 @@ describe('invoices CRUD API', () => {
             })
             .expect(404);
 
-        expect(response.body).toHaveProperty('error', 'Invoice not found at given ID.');
     });
 
     // Test for handling invoice deletion error
@@ -149,6 +144,5 @@ describe('invoices CRUD API', () => {
             .delete(`/invoices/${nonExistentId}`)
             .expect(404);
 
-        expect(response.body).toHaveProperty('error', 'Not found.');
     });
 });

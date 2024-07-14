@@ -65,11 +65,6 @@ router.put('/:id', async (req, res, next) => {
 
     try {
 
-        const exists = await db.query('SELECT * FROM invoices WHERE id = $1;', [id]);
-
-        if (!exists.rowCount)
-            return res.status(404).json({ error: "Invoice not found at given ID." });
-
         const { amt } = req.body;
 
         if (!amt)
@@ -80,7 +75,7 @@ router.put('/:id', async (req, res, next) => {
         if (result.rowCount)
             return res.status(200).json({ invoice: result.rows[0] });
 
-        return res.status(400)
+        return res.status(404).json({ 'error': 'Invoice not found.' });
 
     } catch (err) {
         console.log(err);
@@ -95,17 +90,12 @@ router.delete('/:id', async (req, res, next) => {
 
     try {
 
-        const exists = await db.query('SELECT * FROM invoices WHERE id = $1;', [id]);
-
-        if (!exists.rowCount)
-            return res.status(404).json({ error: "Not found." });
-
         const result = await db.query('DELETE FROM invoices WHERE id = $1', [id]);
 
-        if (result)
+        if (result.rowCount)
             return res.status(200).json({ status: 'deleted' });
 
-        return res.status(500).json({ status: 'failed to delete' });
+        return res.status(404).json({ status: 'Invoice not found.' });
 
     } catch (err) {
         console.log(err);
